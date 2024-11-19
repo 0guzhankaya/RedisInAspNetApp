@@ -1,3 +1,7 @@
+using Microsoft.EntityFrameworkCore;
+using RedisInAspNetApp.API.Models;
+using RedisInAspNetApp.API.Repositories;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -7,10 +11,24 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+
+builder.Services.AddDbContext<AppDbContext>(options =>
+{
+	options.UseInMemoryDatabase("myDatabase");
+});
+
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+// In-MemoryDb'yi uygulama her ayaða kalktýðýnda sýfýrdan oluþturur.
+using (var scope = app.Services.CreateScope())
+{
+	var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+	dbContext.Database.EnsureCreated();
+}
+
+	// Configure the HTTP request pipeline.
+	if (app.Environment.IsDevelopment())
 {
 	app.UseSwagger();
 	app.UseSwaggerUI();
