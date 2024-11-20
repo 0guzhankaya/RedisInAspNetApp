@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+
+using Redis;
 using RedisInAspNetApp.API.Models;
 using RedisInAspNetApp.API.Repositories;
+using StackExchange.Redis;
 
 namespace RedisInAspNetApp.API.Controllers
 {
